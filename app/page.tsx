@@ -5,10 +5,11 @@ const Page = () => {
   return (
     <div>
       <h1 className='text-2xl underline'>
+        Welcome to my Saas app.
+      </h1>
       <Button>
         Get Started
-      </Button>
-      </h1>
+      </Button>     
     </div>
   )
 }
