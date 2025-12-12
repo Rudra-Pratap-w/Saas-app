@@ -22,11 +22,16 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-      <body className={`${bricolage.variable} antialiased`}>
-         <Navbar/>
-        {children}</body>
-    </html>
+        <body
+          className={`${bricolage.variable} antialiased bg-linear-to-b
+      from-blue-900
+      via-green-300
+      to-black`}
+        >
+          <Navbar />
+          {children}
+        </body>
+      </html>
     </ClerkProvider>
-    
   );
 }
