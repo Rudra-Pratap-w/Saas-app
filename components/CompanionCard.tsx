@@ -1,7 +1,7 @@
-import { DeleteIcon, Trash, Trash2, X } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import CompanionsList from "./CompanionsList";
+
 interface CompanionCardProps {
   id: string;
   name: string;

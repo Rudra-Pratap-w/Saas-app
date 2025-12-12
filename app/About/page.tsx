@@ -3,7 +3,6 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Typewriter } from "react-simple-typewriter";
 const About = async () => {
   const user = await currentUser();
   if (!user) {
@@ -51,7 +50,7 @@ const About = async () => {
             <span className="text-blue-400 font-semibold">
               {user.firstName}
             </span>
-            ! My name is <span className="font-semibold">Rudra</span>, and I'm
+            ! My name is <span className="font-semibold">Rudra</span>, and I am
             from India 🇮🇳.
           </p>
           <ul className="list-disc pl-5 space-y-1">
