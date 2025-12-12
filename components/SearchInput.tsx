@@ -1,12 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { formUrlQuery, removeKeysFromUrlQuery } from "@jsmastery/utils";
 const SearchInput = () => {

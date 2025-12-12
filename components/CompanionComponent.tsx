@@ -1,14 +1,10 @@
 "use client";
 import { cn, configureAssistant, getSubjectColor } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
-import Lottie, {
-  LottieComponentProps,
-  LottieRefCurrentProps,
-} from "lottie-react";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import soundwaves from "@/constants/soundwaves.json";
-import { set } from "zod";
 import { addToSessionHistory } from "@/lib/actions/companion.actions";
 
 enum CallStatus {
@@ -41,7 +37,7 @@ const CompanionComponent = ({
         lottieRef.current?.stop();
       }
     }
-  }, []);
+  }, [isSpeaking]);
 
   useEffect(() => {
     const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
@@ -92,7 +88,7 @@ const CompanionComponent = ({
       clientMessages: ["transcript"],
       serverMessages: [],
     };
-    //@ts-expect-error
+    //@ts-expect-error:Just to overcome assistantOverrides mismatch, intentional
     vapi.start(configureAssistant(voice, style), assistantOverrides);
   };
   const handleDisconnect = async () => {

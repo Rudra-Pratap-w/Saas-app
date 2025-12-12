@@ -1,58 +1,59 @@
-"use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select,SelectTrigger,SelectItem,SelectContent,SelectValue } from "./ui/select"
-import { subjects } from "@/constants"
-import { createCompanion } from "@/lib/actions/companion.actions"
-import { redirect } from "next/navigation"
-
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectItem,
+  SelectContent,
+  SelectValue,
+} from "./ui/select";
+import { subjects } from "@/constants";
+import { createCompanion } from "@/lib/actions/companion.actions";
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
-  name: z.string().min(1,{message:'Companion is required.'}),
-  subject: z.string().min(1,{message:'Subject is required.'}),
-  topic: z.string().min(1,{message:'Topic is required.'}),
-  voice: z.string().min(1,{message:'Voice is required.'}),
-  style: z.string().min(1,{message:'Style is required.'}),
-  duration: z.number().min(1,{message:'Duration is required.'}),
-})
+  name: z.string().min(1, { message: "Companion is required." }),
+  subject: z.string().min(1, { message: "Subject is required." }),
+  topic: z.string().min(1, { message: "Topic is required." }),
+  voice: z.string().min(1, { message: "Voice is required." }),
+  style: z.string().min(1, { message: "Style is required." }),
+  duration: z.number().min(1, { message: "Duration is required." }),
+});
 const CompanionForm = () => {
-    const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name:'',
-      subject:'',
-      topic:'',
-      voice:'',
-      style:'',
-      duration:15,
+      name: "",
+      subject: "",
+      topic: "",
+      voice: "",
+      style: "",
+      duration: 15,
     },
-  })
- 
-  
-  const onSubmit=async(values: z.infer<typeof formSchema>)=> {
-    const companion=await createCompanion(values);
-    if(companion){
-       redirect(`/companions/${companion.id}`);
-    }
-    else{
+  });
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const companion = await createCompanion(values);
+    if (companion) {
+      redirect(`/companions/${companion.id}`);
+    } else {
       console.log("Failed to create a companion");
-      redirect('/');
+      redirect("/");
     }
-  }
+  };
   return (
-    
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
@@ -62,8 +63,11 @@ const CompanionForm = () => {
             <FormItem>
               <FormLabel>Companion name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter the companion name" {...field} 
-                className="input"/>
+                <Input
+                  placeholder="Enter the companion name"
+                  {...field}
+                  className="input"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -81,20 +85,20 @@ const CompanionForm = () => {
                   value={field.value}
                   defaultValue={field.value}
                 >
-                    <SelectTrigger className="input capitalize">
-                        <SelectValue placeholder="Select the subject" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {subjects.map((subject)=>(
-                          <SelectItem
-                            value={subject}
-                            key={subject}
-                            className="capitalize"
-                          >
-                              {subject}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
+                  <SelectTrigger className="input capitalize">
+                    <SelectValue placeholder="Select the subject" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {subjects.map((subject) => (
+                      <SelectItem
+                        value={subject}
+                        key={subject}
+                        className="capitalize"
+                      >
+                        {subject}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </FormControl>
             </FormItem>
@@ -108,8 +112,9 @@ const CompanionForm = () => {
               <FormLabel>What should the companion help with?</FormLabel>
               <FormControl>
                 <textarea
-                 placeholder="Ex: Integrals and Derivatives" {...field} 
-                className="input"
+                  placeholder="Ex: Integrals and Derivatives"
+                  {...field}
+                  className="input"
                 />
               </FormControl>
               <FormMessage />
@@ -128,17 +133,13 @@ const CompanionForm = () => {
                   value={field.value}
                   defaultValue={field.value}
                 >
-                    <SelectTrigger className="input capitalize">
-                        <SelectValue placeholder="Select the voice" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="male">
-                            Male
-                        </SelectItem>
-                        <SelectItem value="female">
-                            Female
-                        </SelectItem>
-                    </SelectContent>
+                  <SelectTrigger className="input capitalize">
+                    <SelectValue placeholder="Select the voice" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                  </SelectContent>
                 </Select>
               </FormControl>
               <FormMessage />
@@ -157,17 +158,13 @@ const CompanionForm = () => {
                   value={field.value}
                   defaultValue={field.value}
                 >
-                    <SelectTrigger className="input capitalize">
-                        <SelectValue placeholder="Select the style" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="casual">
-                            Casual
-                        </SelectItem>
-                        <SelectItem value="formal">
-                            Formal
-                        </SelectItem>
-                    </SelectContent>
+                  <SelectTrigger className="input capitalize">
+                    <SelectValue placeholder="Select the style" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="casual">Casual</SelectItem>
+                    <SelectItem value="formal">Formal</SelectItem>
+                  </SelectContent>
                 </Select>
               </FormControl>
               <FormMessage />
@@ -181,20 +178,25 @@ const CompanionForm = () => {
             <FormItem>
               <FormLabel>Enter the session duration in minutes </FormLabel>
               <FormControl>
-                <Input type="number" placeholder="15" {...field} 
-                value={field.value ?? ""} // handle undefined gracefully
-                  onChange={(e) => field.onChange(Number(e.target.value))} // convert string -> number          
-                className="input"/>
+                <Input
+                  type="number"
+                  placeholder="15"
+                  {...field}
+                  value={field.value ?? ""} // handle undefined gracefully
+                  onChange={(e) => field.onChange(Number(e.target.value))} // convert string -> number
+                  className="input"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full cursor-crosshair">Build your companion</Button>
+        <Button type="submit" className="w-full cursor-crosshair">
+          Build your companion
+        </Button>
       </form>
     </Form>
- 
-  )
-}
+  );
+};
 
-export default CompanionForm
+export default CompanionForm;
