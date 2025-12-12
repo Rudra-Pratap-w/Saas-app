@@ -7,7 +7,7 @@ import {
   getRecentSessions,
 } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
-
+export const dynamic = "force-dynamic";
 export const revalidate = 30; // seconds
 
 const Page = async () => {
