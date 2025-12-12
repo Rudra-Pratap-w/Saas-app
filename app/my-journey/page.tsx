@@ -22,8 +22,8 @@ const Profile = async () => {
   const sessionHistory = await getUserSessions(user.id);
 
   return (
-    <main className="w-full flex flex-col h-screen mt-10 border-4">
-      <section className="flex justify-between gap-4 max-sm:flex-col items-center">
+    <main className="w-full flex flex-col h-screen mt-10 border-4 overflow-auto">
+      <section className="flex justify-between gap-4 max-sm:flex-col mt-10 items-center">
         <div className="flex gap-4 items-center">
           <Image
             src={user.imageUrl}
