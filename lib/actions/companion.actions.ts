@@ -68,11 +68,11 @@ export const getCompanion = async (id: string) => {
     .eq("author", userId); // Only return if user owns it
     // Only return if user owns it
 
-    if (Error || !data) {
+    if (error || !data) {
       throw new Error("Companion not found or access denied");
     }
 
-  return data;
+  return data[0];
 };
 
 export const addToSessionHistory = async (companionId: string) => {
