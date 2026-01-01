@@ -5,9 +5,11 @@ import FooterSection from "@/components/footer";
 import {
   getAllCompanions,
   getRecentSessions,
+  getUserCompanions,
+  getUserSessions,
 } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
-
+import { auth } from "@clerk/nextjs/server";
 export const revalidate = 30; // seconds
 
 const Page = async () => {

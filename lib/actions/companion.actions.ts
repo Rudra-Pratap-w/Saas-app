@@ -25,9 +25,13 @@ export const getAllCompanions = async ({
   subject,
   topic,
 }: GetAllCompanions) => {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
   const supabase = createSupabaseClient();
 
-  let query = supabase.from("companions").select();
+  let query = supabase.from("companions").select().eq("author", userId);
 
   if (subject && topic) {
     query = query
@@ -43,22 +47,32 @@ export const getAllCompanions = async ({
 
   const { data: companions, error } = await query;
 
-  if (error) throw new Error(error.message);
-
+  if (error) {
+    console.error("Supabase error:", error);
+    throw new Error(error.message);
+  }
   return companions;
 };
 
 export const getCompanion = async (id: string) => {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
   const supabase = createSupabaseClient();
 
   const { data, error } = await supabase
     .from("companions")
-    .select()
-    .eq("id", id);
+    .select()    
+    .eq("id", id)
+    .eq("author", userId); // Only return if user owns it
+    // Only return if user owns it
 
-  if (error) return console.log(error);
+    if (Error || !data) {
+      throw new Error("Companion not found or access denied");
+    }
 
-  return data[0];
+  return data;
 };
 
 export const addToSessionHistory = async (companionId: string) => {
@@ -73,12 +87,74 @@ export const addToSessionHistory = async (companionId: string) => {
 
   return data;
 };
+// export const deleteCard = async (id: string) => {
+//   console.log(id);
+
+//   const { userId } = await auth();
+//   if (!userId) return;
+//   const supabase = createSupabaseClient();
+//   const { data, error } = await supabase
+//     .from("companions")
+//     .delete()
+//     .eq("id", id);
+//   if (error) {
+//     throw new Error(error.message);
+//   }
+//   console.log(data);
+// };
+
+export const deleteCard = async (id: string, path: string) => {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const supabase = createSupabaseClient();
+
+  // First verify the user owns this companion
+  const { data: companion, error: fetchError } = await supabase
+    .from("companions")
+    .select("author")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !companion) {
+    throw new Error("Companion not found");
+  }
+
+  if (companion.author !== userId) {
+    throw new Error("You don't have permission to delete this companion");
+  }
+
+  // Delete the companion
+  const { error } = await supabase
+    .from("companions")
+    .delete()
+    .eq("id", id)
+    .eq("author", userId); // Extra security check
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  // Revalidate the path to update the UI
+  revalidatePath(path);
+  revalidatePath("/"); // Also revalidate home page
+  revalidatePath("/companions"); // And companions page
+
+  return { success: true };
+};
 
 export const getRecentSessions = async (limit = 10) => {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("session_history")
     .select(`companions:companion_id (*)`)
+    .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(limit);
 

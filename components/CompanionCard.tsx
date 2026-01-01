@@ -1,8 +1,12 @@
+"use client";
+import { deleteCard } from "@/lib/actions/companion.actions";
 import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 interface CompanionCardProps {
+  companionId: string;
   id: string;
   name: string;
   topic: string;
@@ -19,6 +23,30 @@ const CompanionCard = ({
   duration,
   color,
 }: CompanionCardProps) => {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await deleteCard(id, pathname);
+      // Optionally refresh the page to show updated list
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to delete companion:", error);
+      alert(
+        error instanceof Error ? error.message : "Failed to delete companion"
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <article
       className="companion-card shadow-gray-800 hover:scale-102 backdrop-blur-5xl bg-amber-50 transition-transform duration-300 hover:shadow-2xl "
@@ -55,7 +83,11 @@ const CompanionCard = ({
             Launch Lesson
           </button>
         </Link>
-        <button>
+        <button
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           <X
             color="black"
             size={20}
