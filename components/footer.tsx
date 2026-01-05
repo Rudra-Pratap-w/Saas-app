@@ -18,7 +18,7 @@ export default function FooterSection() {
       <div className="mx-auto max-w-5xl px-6">
         <Link href="/" aria-label="go home" className="mx-auto block size-fit">
           <Image
-            src="/icons/Black and Gold Simple Online Academy logo (1).svg"
+            src="/icons/TuteBro.svg"
             alt="footer-logo"
             width={40}
             height={40}
