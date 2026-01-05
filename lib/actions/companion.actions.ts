@@ -3,7 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { createSupabaseClient } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
-
+import { redirect } from "next/navigation";
 export const createCompanion = async (formData: CreateCompanion) => {
   const { userId: author } = await auth();
   const supabase = createSupabaseClient();
@@ -27,7 +27,7 @@ export const getAllCompanions = async ({
 }: GetAllCompanions) => {
   const { userId } = await auth();
   if (!userId) {
-    throw new Error("Unauthorized");
+    redirect("/sign-in");
   }
   const supabase = createSupabaseClient();
 
@@ -63,16 +63,15 @@ export const getCompanion = async (id: string) => {
 
   const { data, error } = await supabase
     .from("companions")
-    .select()    
+    .select()
     .eq("id", id)
-    .eq("author", userId); // Only return if user owns it
-    // Only return if user owns it
+    .eq("author", userId)
+    .single(); // Only return if user owns it
+  if (error || !data) {
+    throw new Error("Companion not found or access denied");
+  }
 
-    if (error || !data) {
-      throw new Error("Companion not found or access denied");
-    }
-
-  return data[0];
+  return data;
 };
 
 export const addToSessionHistory = async (companionId: string) => {
